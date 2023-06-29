@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace nil70n.AspNet.Helpers.FromClaim
+namespace AspNet.Helpers.FromClaim
 {
   public sealed class ClaimValueProviderFactory : IValueProviderFactory
   {
