@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace nil70n.AspNet.Helpers.FromClaim
+namespace AspNet.Helpers.FromClaim
 {
   public static class ClaimBindingSource
   {

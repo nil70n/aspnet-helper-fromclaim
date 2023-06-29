@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace nil70n.AspNet.Helpers.FromClaim
+namespace AspNet.Helpers.FromClaim
 {
   [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
   public sealed class FromClaimAttribute : Attribute, IBindingSourceMetadata, IModelNameProvider
