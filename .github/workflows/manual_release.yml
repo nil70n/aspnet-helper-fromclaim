@@ -1,0 +1,67 @@
+name: Manual Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release Version without v
+        default: 1.0.0
+        required: true
+      description:
+        description: Release Description
+        default: Release 1.0.0
+        required: true
+
+env:
+  PROJECT_NAME: 'nil70n.AspNet.Helpers.FromClaim'
+  PROJECT_PATH: 'src/nil70n.AspNet.Helpers.FromClaim/nil70n.AspNet.Helpers.FromClaim.csproj'
+  PKG_OUTPUT_DIR: ${{ github.workspace }}\output
+  NUGET_URL: 'https://api.nuget.org/v3/index.json'
+
+jobs:
+  release:
+    name: 'Manual Release'
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+ 
+      - name: 'Install dotnet'
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '7.0.x'
+
+      - name: 'Restore Packages'
+        run: dotnet restore ${{ env.PROJECT_PATH }}
+      
+      - name: 'Build project'
+        run: dotnet build ${{ env.PROJECT_PATH }} --no-restore -c Release
+
+      - name: 'Pack project'
+        run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=${{ github.event.inputs.version }} --output ${{ env.PKG_OUTPUT_DIR }}
+
+      - name: 'Create Release'
+        id: release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          release_name: Release ${{ github.event.inputs.version }}
+          body: ${{ github.event.inputs.description }}
+          draft: false
+          prerelease: false
+
+      - name: 'Upload Release Asset'
+        id: upload-release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.release.outputs.upload_url }}
+          asset_path: ${{ env.PKG_OUTPUT_DIR }}\*.nupkg
+          asset_name: ${{ env.PROJECT_NAME }}
+          asset_content_type: application/zip
+
+      - name: 'Push package'
+        run: dotnet nuget push ${{ env.PKG_OUTPUT_DIR }}\*.nupkg -k ${{ secrets.NUGET_KEY }} -s ${{ env.NUGET_URL }}
