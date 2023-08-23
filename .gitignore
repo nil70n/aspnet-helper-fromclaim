@@ -1,2 +1,4 @@
-src/nil70n.AspNet.Helpers.FromClaim/obj/*
-src/nil70n.AspNet.Helpers.FromClaim/bin/*
+src/*/obj/*
+src/*/bin/*
+test/*/obj/*
+test/*/bin/*
