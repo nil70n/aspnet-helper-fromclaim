@@ -1,4 +1,4 @@
-# Helper.Claims
+# AspNet.Helpers.FromClaim
 
 ## Description
 Adds the "FromClaim" attribute to easily get values from claims in ASP.NET controller methods.
@@ -6,13 +6,13 @@ Adds the "FromClaim" attribute to easily get values from claims in ASP.NET contr
 ## Configuring
 After installing the package, change the Startup class adding the required factory like in the example below:
 
-```
+```c#
 // ...
 
 public void ConfigureServices(IServiceCollection services)
 {
   // ...
-  services.AddControllers(options => options.ValueProviderFactories.Add(new ClaimValueProviderFactory()));
+  services.AddControllers(ClaimValueProviderFactory.AddInstance);
   // ...
 }
 
@@ -22,7 +22,7 @@ public void ConfigureServices(IServiceCollection services)
 ## Usage
 Here's an example of how you can get the email from the user claims:
 
-```
+```c#
 public ActionResult GetMyEmail([FromClaim(ClaimTypes.Email)] string userEmail)
 {
   return Ok(userEmail);

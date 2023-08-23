@@ -1,0 +1,34 @@
+name: OpenPullRequest
+
+on:
+  push:
+    tags: 'v*'
+
+jobs:
+  open_pull_request:
+    name: 'Open Pull Request'
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+
+      - name: 'Get version'
+        id: version
+        uses: battila7/get-version-action@v2
+
+      - name: 'Extract branch name'
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+              
+      - name: 'Open Pull Request'
+        id: pull_request
+        uses: devops-infra/action-pull-request@v0.5.5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          source_branch: ${{ steps.extract_branch.outputs.branch }}
+          target_branch: main
+          title: ${{ steps.version.outputs.version }}
+          label: ${{ steps.version.outputs.version-without-v }}
+          get_diff: true
+          allow_no_diff: false
