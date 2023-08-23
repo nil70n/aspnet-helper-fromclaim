@@ -1,0 +1,39 @@
+name: Build
+
+on:
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - 'main'
+
+env:
+  PROJECT_PATH: 'src/nil70n.AspNet.Helpers.FromClaim/nil70n.AspNet.Helpers.FromClaim.csproj'
+  TEST_PROJECT_PATH: 'test/nil70n.AspNet.Helpers.FromClaim.Tests/nil70n.AspNet.Helpers.FromClaim.Tests.csproj'
+
+jobs:
+  build:
+    name: 'Test'
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+      
+      - name: 'Install dotnet'
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '7.0.x'
+
+      - name: 'Restore Project Packages'
+        run: dotnet restore ${{ env.PROJECT_PATH }}
+      
+      - name: 'Build Project'
+        run: dotnet build ${{ env.PROJECT_PATH }} --no-restore -c Release
+
+      - name: 'Restore Test Packages'
+        run: dotnet restore ${{ env.TEST_PROJECT_PATH }}
+      
+      - name: 'Build Test Project'
+        run: dotnet build ${{ env.TEST_PROJECT_PATH }} --no-restore
+
+      - name: 'Run Test Project'
+        run: dotnet test ${{ env.TEST_PROJECT_PATH }} --no-restore --no-build
