@@ -12,17 +12,19 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: 'Get version'
         id: version
         uses: battila7/get-version-action@v2
-              
+
       - name: 'Open Pull Request'
         id: pull_request
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: main
-          branch: ${{ github.ref }}
           title: ${{ steps.version.outputs.version }}
           labels: ${{ steps.version.outputs.version-without-v }}
+          delete-branch: true
