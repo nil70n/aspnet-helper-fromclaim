@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Security.Claims;
 
-namespace nil70n.AspNet.Helpers.FromClaim
+namespace AspNet.Helpers.FromClaim
 {
   public sealed class ClaimValueProvider : BindingSourceValueProvider
   {
