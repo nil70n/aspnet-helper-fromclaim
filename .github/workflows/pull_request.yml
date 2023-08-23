@@ -3,7 +3,7 @@ name: Open Pull Request on Tag Push
 on:
   push:
     tags:
-      - 'v*'
+      - '[0-9]+.[0-9]+.[0-9]'
 
 jobs:
   open_pull_request:

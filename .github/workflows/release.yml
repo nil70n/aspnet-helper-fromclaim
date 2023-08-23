@@ -24,9 +24,11 @@ jobs:
         with:
           dotnet-version: '7.0.x'
 
-      - name: 'Get Version'
-        uses: battila7/get-version-action@v2
-        id: version
+      - name: 'Get last tag'
+        id: tag
+        uses: 'WyriHaximus/github-action-get-previous-tag@v1'
+        with:
+          fallback: 1.0.0
 
       - name: 'Get Pull Request'
         uses: 8BitJonny/gh-get-current-pr@2.2.0
@@ -42,7 +44,7 @@ jobs:
         run: dotnet build ${{ env.PROJECT_PATH }} --no-restore -c Release
 
       - name: 'Pack project'
-        run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output ${{ env.PKG_OUTPUT_DIR }}
+        run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=${{ steps.tag.outputs.tag }} --output ${{ env.PKG_OUTPUT_DIR }}
 
       - name: 'Create Release'
         id: release
@@ -50,8 +52,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.version.outputs.version-without-v }}
-          release_name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ steps.tag.outputs.tag }}
+          release_name: v${{ steps.tag.outputs.tag }}
           body: ${{ steps.pr.outputs.pr_body }}
           draft: false
           prerelease: false
