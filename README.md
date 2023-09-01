@@ -28,3 +28,6 @@ public ActionResult GetMyEmail([FromClaim(ClaimTypes.Email)] string userEmail)
   return Ok(userEmail);
 }
 ```
+
+## Acknowledgments
+Huge thanks for Dávid Kaya who made [this blog post](https://www.davidkaya.com/p/custom-from-attribute-for-controller-actions-in-asp-net-core). I'm using this solution for so long that I had a hard time finding the reference to include here.
