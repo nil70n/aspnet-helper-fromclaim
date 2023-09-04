@@ -35,8 +35,7 @@ jobs:
         run: dotnet build ${{ env.PROJECT_PATH }} --no-restore -c Release
 
       - name: 'Pack project'
-        run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols |
-          -p:PackageVersion=${{ github.event.inputs.package_version }} --output ${{ env.PKG_OUTPUT_DIR }}
+        run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=${{ github.event.inputs.package_version }} --output ${{ env.PKG_OUTPUT_DIR }}
 
       - name: 'Zip assets'
         run: zip -r ${{ env.PKG_OUTPUT_DIR }}\${{ env.PROJECT_NAME }} |
