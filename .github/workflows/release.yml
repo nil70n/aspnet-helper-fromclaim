@@ -56,7 +56,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.release.outputs.upload_url }}
-          asset_path: ${{ env.PKG_OUTPUT_DIR }}\*.nupkg
+          asset_path: ${{ env.PKG_OUTPUT_DIR }}\${{ env.PROJECT_NAME }}.${{ github.event.inputs.package_version }}.nupkg
           asset_name: ${{ env.PROJECT_NAME }}
           asset_content_type: application/zip
 
