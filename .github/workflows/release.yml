@@ -2,6 +2,11 @@ name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      package_version:
+        description: 'Package version'
+        required: true
+        default: '1.0.0'
 
 env:
   PROJECT_NAME: 'nil70n.AspNet.Helpers.FromClaim'
@@ -23,17 +28,6 @@ jobs:
         with:
           dotnet-version: '7.0.x'
 
-      - name: Get version
-        id: version
-        uses: jannemattila/get-version-from-tag@v1
-
-      - name: 'Get Pull Request'
-        uses: 8BitJonny/gh-get-current-pr@2.2.0
-        id: pr
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          filterOutDraft: true
-
       - name: 'Restore Packages'
         run: dotnet restore ${{ env.PROJECT_PATH }}
       
@@ -41,7 +35,7 @@ jobs:
         run: dotnet build ${{ env.PROJECT_PATH }} --no-restore -c Release
 
       - name: 'Pack project'
-        run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=${{ steps.version.outputs.version }} --output ${{ env.PKG_OUTPUT_DIR }}
+        run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=${{ github.event.inputs.package_version }} --output ${{ env.PKG_OUTPUT_DIR }}
 
       - name: 'Create Release'
         id: release
@@ -49,9 +43,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ github.event.inputs.package_version }}
           release_name: v${{ steps.version.outputs.version }}
-          body: ${{ steps.pr.outputs.pr_body }}
+          body: version ${{ steps.version.outputs.version }}
           draft: false
           prerelease: false
 
