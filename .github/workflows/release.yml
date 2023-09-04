@@ -12,7 +12,7 @@ env:
   PROJECT_NAME: 'nil70n.AspNet.Helpers.FromClaim'
   PROJECT_PATH: 'src/nil70n.AspNet.Helpers.FromClaim/nil70n.AspNet.Helpers.FromClaim.csproj'
   PKG_OUTPUT_DIR: ${{ github.workspace }}\output
-  PKG_OUTPUT_ZIP_DIR: ${{ github.workspace }}\output
+  PKG_OUTPUT_ZIP_DIR: ${{ github.workspace }}/output
   NUGET_URL: 'https://api.nuget.org/v3/index.json'
 
 jobs:
