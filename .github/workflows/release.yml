@@ -39,7 +39,9 @@ jobs:
         run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=${{ github.event.inputs.package_version }} --output ${{ env.PKG_OUTPUT_DIR }}
 
       - name: 'Zip assets'
-        run: zip -r -q ${{ env.PROJECT_NAME }}.zip . i ${{ env.PKG_OUTPUT_ZIP_DIR }}
+        run: zip ${{ env.PKG_OUTPUT_ZIP_DIR }}/${{ env.PROJECT_NAME }}.zip |
+          ${{ env.PKG_OUTPUT_ZIP_DIR }}/${{ env.PROJECT_NAME }}.${{ github.event.inputs.package_version }}.nupkg |
+          ${{ env.PKG_OUTPUT_ZIP_DIR }}/${{ env.PROJECT_NAME }}.${{ github.event.inputs.package_version }}.snupkg
 
       - name: 'Create Release'
         id: release
