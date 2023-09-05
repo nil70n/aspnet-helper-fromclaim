@@ -38,7 +38,7 @@ jobs:
         run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=${{ github.event.inputs.package_version }} --output ${{ env.PKG_OUTPUT_DIR }}
 
       - name: 'Zip assets'
-        run: zip ${{ env.PROJECT_NAME }}.zip |
+        run: zip -X ${{ env.PKG_OUTPUT_DIR }}/${{ env.PROJECT_NAME }}.zip |
           ${{ env.PKG_OUTPUT_DIR }}/${{ env.PROJECT_NAME }}.${{ github.event.inputs.package_version }}.nupkg |
           ${{ env.PKG_OUTPUT_DIR }}/${{ env.PROJECT_NAME }}.${{ github.event.inputs.package_version }}.snupkg
 
@@ -61,7 +61,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.release.outputs.upload_url }}
-          asset_path: ${{ env.PROJECT_NAME }}.zip
+          asset_path: ${{ env.PKG_OUTPUT_DIR }}/${{ env.PROJECT_NAME }}.zip
           asset_name: ${{ env.PROJECT_NAME }}.zip
           asset_content_type: application/zip
 
