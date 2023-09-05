@@ -7,10 +7,6 @@ on:
         description: 'Package version'
         required: true
         default: '1.0.0'
-      release_body:
-        description: 'Release body'
-        required: true
-        default: 'Release 1.0.0'
 
 env:
   PROJECT_NAME: 'nil70n.AspNet.Helpers.FromClaim'
@@ -42,4 +38,4 @@ jobs:
         run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build -c Release --include-symbols -p:PackageVersion=${{ github.event.inputs.package_version }} --output ${{ env.PKG_OUTPUT_DIR }}
 
       - name: 'Push package'
-        run: dotnet nuget push ${{ env.PKG_OUTPUT_DIR }}\*.nupkg -k ${{ secrets.NUGET_KEY }} -s ${{ env.NUGET_URL }}
+        run: dotnet nuget push ${{ env.PKG_OUTPUT_DIR }}/${{ env.PROJECT_NAME }}.${{ github.event.inputs.package_version }}.nupkg -k ${{ secrets.NUGET_KEY }} -s ${{ env.NUGET_URL }}
