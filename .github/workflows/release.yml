@@ -7,6 +7,10 @@ on:
         description: 'Package version'
         required: true
         default: '1.0.0'
+      release_body:
+        description: 'Release body'
+        required: true
+        default: 'Release 1.0.0'
 
 env:
   PROJECT_NAME: 'nil70n.AspNet.Helpers.FromClaim'
@@ -40,6 +44,11 @@ jobs:
           ${{ env.PKG_OUTPUT_DIR }}/${{ env.PROJECT_NAME }}.${{ github.event.inputs.package_version }}.nupkg |
           ${{ env.PKG_OUTPUT_DIR }}/${{ env.PROJECT_NAME }}.${{ github.event.inputs.package_version }}.snupkg
 
+      - name: 'Zip assets'
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r ${{ env.PKG_OUTPUT_DIR }}/${{ env.PROJECT_NAME }}.zip ${{ env.PKG_OUTPUT_DIR }}
+
       - name: 'Create Release'
         id: release
         uses: actions/create-release@v1
@@ -48,7 +57,7 @@ jobs:
         with:
           tag_name: ${{ github.event.inputs.package_version }}
           release_name: v${{ steps.version.outputs.version }}
-          body: version ${{ steps.version.outputs.version }}
+          body: ${{ github.event.inputs.release_body }}
           draft: false
           prerelease: false
 
